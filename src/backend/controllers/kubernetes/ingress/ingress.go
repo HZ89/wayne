@@ -67,7 +67,7 @@ func (c *KubeIngressController) Deploy() {
 			logs.Critical("insert log into database failed: %s", err)
 		}
 	}()
-	_, err = ingress.CreateOrUpdateService(k8sClient, &kubeIngress)
+	_, err = ingress.CreateOrUpdateIngress(k8sClient, &kubeIngress)
 	if err != nil {
 		publishHistory.Status = models.ReleaseFailure
 		publishHistory.Message = err.Error()
@@ -100,7 +100,7 @@ func (c *KubeIngressController) Get() {
 		c.AbortBadRequestFormat("Cluster")
 		return
 	}
-	res, err := ingress.GetServiceDetail(k8sClinet, name, namespace)
+	res, err := ingress.GetIngressDetail(k8sClinet, name, namespace)
 	if err != nil {
 		logs.Error("get ingress error cluster: %s, namespace: %s", cluster, namespace)
 		c.HandleError(err)
@@ -118,7 +118,7 @@ func (c *KubeIngressController) Offline() {
 		c.AbortBadRequestFormat("Cluster")
 		return
 	}
-	if err = ingress.DeleteService(k8sClient, name, namespace); err != nil {
+	if err = ingress.DeleteIngress(k8sClient, name, namespace); err != nil {
 		logs.Error("delete ingress: %s in namespace: %s, error: %s", name, namespace, err.Error())
 		c.HandleError(err)
 		return
