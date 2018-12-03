@@ -20,6 +20,7 @@ import (
 	"github.com/Qihoo360/wayne/src/backend/controllers/cronjob"
 	"github.com/Qihoo360/wayne/src/backend/controllers/daemonset"
 	"github.com/Qihoo360/wayne/src/backend/controllers/deployment"
+	"github.com/Qihoo360/wayne/src/backend/controllers/dns"
 	"github.com/Qihoo360/wayne/src/backend/controllers/ingress"
 	kconfigmap "github.com/Qihoo360/wayne/src/backend/controllers/kubernetes/configmap"
 	kcronjob "github.com/Qihoo360/wayne/src/backend/controllers/kubernetes/cronjob"
@@ -294,6 +295,18 @@ func init() {
 			),
 		),
 	)
+	nsDoaminAPI := beego.NewNamespace("/api/V1",
+		beego.NSNamespace("/doamin",
+			beego.NSInclude(
+				&dns.DomainController{},
+			),
+		),
+		beego.NSNamespace("/domain/:domainid([0-9]+)",
+			beego.NSInclude(
+				&dns.DomainRecordController{},
+			),
+		),
+	)
 
 	nsWithoutApp := beego.NewNamespace("/api/v1",
 		// 路由中不携带任何id
@@ -377,6 +390,8 @@ func init() {
 	beego.AddNamespace(nsWithNamespace)
 
 	beego.AddNamespace(nsWithOpenAPI)
+
+	beego.AddNamespace(nsDoaminAPI)
 
 	beego.Router("/*", &controllers.IndexController{})
 
