@@ -45,6 +45,7 @@ var (
 	NotificationLogModel          *notificationLogModel
 	IngressModel                  *ingressModel
 	IngressTemplateModel          *ingressTemplateModel
+	DomainModel                   *domainModel
 )
 
 func init() {
@@ -86,7 +87,8 @@ func init() {
 		new(Notification),
 		new(NotificationLog),
 		new(Ingress),
-		new(IngressTemplate))
+		new(IngressTemplate),
+		new(Domain))
 
 	// init models
 	UserModel = &userModel{}
@@ -123,6 +125,7 @@ func init() {
 	NotificationLogModel = &notificationLogModel{}
 	IngressModel = &ingressModel{}
 	IngressTemplateModel = &ingressTemplateModel{}
+	DomainModel = &domainModel{}
 }
 
 // singleton init ormer ,only use for normal db operation

@@ -22,13 +22,13 @@ type Provider interface {
 }
 
 type Record struct {
-	Id         string
-	Type       string
-	DomainName string
-	Value      string
-	RR         string
-	TTL        int
-	Enabled    bool
+	Id         string `json:"id"`
+	Type       string `json:"type"`
+	DomainName string `json:"domainName"`
+	Value      string `json:"value"`
+	RR         string `json:"rr"`
+	TTL        int    `json:"ttl"`
+	Enabled    bool   `json:"enabled"`
 }
 
 func NewProvider(name, ak, aks string) (Provider, error) {
