@@ -3,8 +3,6 @@ package dns
 import (
 	"fmt"
 	"sync"
-
-	_ "github.com/Qihoo360/wayne/src/backend/resources/dns/provider/alicloud"
 )
 
 var (

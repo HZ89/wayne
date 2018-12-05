@@ -5,6 +5,7 @@ import (
 
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
+	_ "github.com/Qihoo360/wayne/src/backend/resources/dns/provider/alicloud"
 	"github.com/Qihoo360/wayne/src/backend/util/logs"
 )
 
