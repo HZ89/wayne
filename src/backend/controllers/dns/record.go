@@ -7,6 +7,7 @@ import (
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
 	"github.com/Qihoo360/wayne/src/backend/resources/dns"
+	_ "github.com/Qihoo360/wayne/src/backend/resources/dns/provider/alicloud"
 	"github.com/Qihoo360/wayne/src/backend/util/logs"
 )
 
@@ -144,7 +145,7 @@ func (c *DomainRecordController) Delete() {
 		return
 	}
 	if _, err := p.DeleteDomainRecord(strconv.Itoa(int(rId))); err != nil {
-		logs.Error("delete domain(%s) provider(%s) record(%s) failed:%s", d.Name, d.Provider, r.Id, err.Error())
+		logs.Error("delete domain(%s) provider(%s) record(%s) failed:%s", d.Name, d.Provider, rId, err.Error())
 		c.AbortInternalServerError("delete domain record failed")
 	}
 	c.Success(nil)
