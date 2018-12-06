@@ -1,4 +1,4 @@
-package dns
+package domain
 
 import (
 	"fmt"
@@ -36,7 +36,11 @@ func NewProvider(name, ak, aks string) (Provider, error) {
 	if !ok {
 		return nil, fmt.Errorf("provider %s not support yet", name)
 	}
-	return f(ak, aks)
+	p, err := f(ak, aks)
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
 }
 
 func Register(name string, f func(string, string) (Provider, error)) {

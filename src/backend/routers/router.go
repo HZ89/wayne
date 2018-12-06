@@ -20,7 +20,8 @@ import (
 	"github.com/Qihoo360/wayne/src/backend/controllers/cronjob"
 	"github.com/Qihoo360/wayne/src/backend/controllers/daemonset"
 	"github.com/Qihoo360/wayne/src/backend/controllers/deployment"
-	"github.com/Qihoo360/wayne/src/backend/controllers/dns"
+	"github.com/Qihoo360/wayne/src/backend/controllers/domain"
+	"github.com/Qihoo360/wayne/src/backend/controllers/domain_record"
 	"github.com/Qihoo360/wayne/src/backend/controllers/ingress"
 	kconfigmap "github.com/Qihoo360/wayne/src/backend/controllers/kubernetes/configmap"
 	kcronjob "github.com/Qihoo360/wayne/src/backend/controllers/kubernetes/cronjob"
@@ -295,15 +296,17 @@ func init() {
 			),
 		),
 	)
-	nsDoaminAPI := beego.NewNamespace("/api/V1",
-		beego.NSNamespace("/doamin",
+	nsDomainRecord := beego.NewNamespace("/api/v1",
+		beego.NSNamespace("/domain/:domainid([0-9]+)/record",
 			beego.NSInclude(
-				&dns.DomainController{},
+				&domain_record.DomainRecordController{},
 			),
 		),
-		beego.NSNamespace("/domain/:domainid([0-9]+)",
+	)
+	nsDomain := beego.NewNamespace("/api/v1",
+		beego.NSNamespace("/domain",
 			beego.NSInclude(
-				&dns.DomainRecordController{},
+				&domain.DomainController{},
 			),
 		),
 	)
@@ -391,7 +394,8 @@ func init() {
 
 	beego.AddNamespace(nsWithOpenAPI)
 
-	beego.AddNamespace(nsDoaminAPI)
+	beego.AddNamespace(nsDomain)
+	beego.AddNamespace(nsDomainRecord)
 
 	beego.Router("/*", &controllers.IndexController{})
 
