@@ -74,8 +74,7 @@ func (*domainModel) GetByName(name string) (v *Domain, err error) {
 }
 
 func (*domainModel) DeleteById(id int64, logical bool) (err error) {
-	v := new(Domain)
-	v.Id = id
+	v := Domain{Id: id}
 
 	if err = Ormer().Read(&v); err != nil {
 		return

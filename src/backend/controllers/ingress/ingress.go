@@ -62,6 +62,14 @@ func (c *IngressController) GetNames() {
 	c.Success(services)
 }
 
+// @Title GetAll
+// @Description get all ingress
+// @Param	pageNo		query 	int	false		"the page current no"
+// @Param	pageSize		query 	int	false		"the page size"
+// @Param	name		query 	string	false		"name filter"
+// @Param	deleted		query 	bool	false		"is deleted, default list all"
+// @Success 200 {object} []models.ingress success
+// @router / [get]
 func (c *IngressController) List() {
 	param := c.BuildQueryParam()
 	name := c.Input().Get("name")
@@ -99,6 +107,11 @@ func (c *IngressController) List() {
 	c.Success(param.NewPage(total, ingrs))
 }
 
+// @Title Create
+// @Description create ingress
+// @Param	body		body 	models.ingressTemplate	true		"The ingressTpl content"
+// @Success 200 return models.ingress success
+// @router / [post]
 func (c *IngressController) Create() {
 	var ingr models.Ingress
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ingr)
@@ -118,6 +131,11 @@ func (c *IngressController) Create() {
 	c.Success(ingr)
 }
 
+// @Title Get
+// @Description find Object by id
+// @Param	id		path 	int	true		"the id you want to get"
+// @Success 200 {object} models.ingress success
+// @router /:id([0-9]+) [get]
 func (c *IngressController) Get() {
 	id := c.GetIDFromURL()
 
@@ -132,6 +150,12 @@ func (c *IngressController) Get() {
 	return
 }
 
+// @Title Update
+// @Description update the ingress
+// @Param	id		path 	int	true		"The id you want to update"
+// @Param	body		body 	models.ingrTemplate	true		"The body"
+// @Success 200 models.ingress success
+// @router /:id([0-9]+) [put]
 func (c *IngressController) Update() {
 	id := c.GetIDFromURL()
 	var ingr models.Ingress
@@ -151,6 +175,12 @@ func (c *IngressController) Update() {
 	c.Success(ingr)
 }
 
+// @Title Update
+// @Description update the ingrTpl
+// @Param	id		path 	int	true		"The id you want to update"
+// @Param	body		body 	models.ingrTemplate	true		"The body"
+// @Success 200 models.ingrTemplate success
+// @router /:id([0-9]+) [put]
 func (c *IngressController) UpdateOrders() {
 	var ingr []*models.Ingress
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ingr)
@@ -168,6 +198,12 @@ func (c *IngressController) UpdateOrders() {
 	c.Success("ok!")
 }
 
+// @Title Delete
+// @Description delete the ingress
+// @Param	id		path 	int	true		"The id you want to delete"
+// @Param	logical		query 	bool	false		"is logical deletion,default true"
+// @Success 200 {string} delete success!
+// @router /:id([0-9]+) [delete]
 func (c *IngressController) Delete() {
 	id := c.GetIDFromURL()
 

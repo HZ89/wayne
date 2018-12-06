@@ -1,4 +1,4 @@
-package dns
+package domain_record
 
 import (
 	"encoding/json"
@@ -6,8 +6,8 @@ import (
 
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
-	"github.com/Qihoo360/wayne/src/backend/resources/dns"
-	_ "github.com/Qihoo360/wayne/src/backend/resources/dns/provider/alicloud"
+	"github.com/Qihoo360/wayne/src/backend/resources/domain"
+	_ "github.com/Qihoo360/wayne/src/backend/resources/domain/provider/alicloud"
 	"github.com/Qihoo360/wayne/src/backend/util/logs"
 )
 
@@ -59,7 +59,7 @@ func (c *DomainRecordController) List() {
 // @router / [post]
 func (c *DomainRecordController) Create() {
 	domainId := c.GetIntParamFromURL(":domainid")
-	var r dns.Record
+	var r domain.Record
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &r)
 	if err != nil {
 		logs.Error("get body error %v", err)
@@ -110,7 +110,7 @@ func (c *DomainRecordController) Get() {
 // @router /:id([0-9]+) [put]
 func (c *DomainRecordController) Update() {
 	domainId := c.GetIntParamFromURL(":domainid")
-	r := new(dns.Record)
+	r := new(domain.Record)
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, r)
 	if err != nil {
 		logs.Error("Invalid param body.%v", err)
@@ -151,12 +151,12 @@ func (c *DomainRecordController) Delete() {
 	c.Success(nil)
 }
 
-func newDomainProvider(id int64) (p dns.Provider, domain *models.Domain, err error) {
-	domain, err = models.DomainModel.GetById(id)
+func newDomainProvider(id int64) (p domain.Provider, d *models.Domain, err error) {
+	d, err = models.DomainModel.GetById(id)
 	if err != nil {
 		return
 	}
-	p, err = dns.NewProvider(domain.Provider, domain.AccessKeyId, domain.AccessKey)
+	p, err = domain.NewProvider(d.Provider, d.AccessKeyId, d.AccessKey)
 	if err != nil {
 		return
 	}
