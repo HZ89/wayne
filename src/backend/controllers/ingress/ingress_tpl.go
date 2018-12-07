@@ -6,6 +6,7 @@ import (
 
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
+	"github.com/Qihoo360/wayne/src/backend/resources/domain"
 	"github.com/Qihoo360/wayne/src/backend/util/hack"
 	"github.com/Qihoo360/wayne/src/backend/util/logs"
 	kapiv1beta1 "k8s.io/api/extensions/v1beta1"
@@ -92,11 +93,27 @@ func (c *IngressTplController) Create() {
 		logs.Error("get body error. %v", err)
 		c.AbortBadRequestFormat("ingressTemplate")
 	}
-	err = validIngressTemplate(ingrTpl.Template)
+	_, err := validIngressTemplate(ingrTpl.Template)
 	if err != nil {
 		logs.Error("valid template err %v", err)
 		c.AbortBadRequestFormat("Kubeingress")
 	}
+	//addDoaminRecord := c.GetBoolParamFromQuery("addDomainRecord")
+	//if addDoaminRecord{
+	//	for _, rule := range ingrConf.Spec.Rules {
+	//		domainName, err := models.DomainModel.GetByName(rule.Host)
+	//		if err != nil {
+	//			logs.Error("find domainName failed: %s", err.Error())
+	//			c.AbortInternalServerError("kubeingress")
+	//		}
+	//		p, err := domain.NewProvider(domainName.Provider, domainName.AccessKeyId, domainName.AccessKey)
+	//		if err != nil {
+	//			logs.Error("new domain provider failed: %s", err.Error())
+	//			c.AbortInternalServerError("kubeingress")
+	//		}
+	//
+	//	}
+	//}
 
 	ingrTpl.User = c.User.Name
 
@@ -109,13 +126,12 @@ func (c *IngressTplController) Create() {
 	c.Success(ingrTpl)
 }
 
-func validIngressTemplate(ingrTplStr string) error {
-	ingr := kapiv1beta1.Ingress{}
-	err := json.Unmarshal(hack.Slice(ingrTplStr), &ingr)
+func validIngressTemplate(ingrTplStr string) (ingr *kapiv1beta1.Ingress, err error) {
+	err = json.Unmarshal(hack.Slice(ingrTplStr), &ingr)
 	if err != nil {
-		return fmt.Errorf("ingress template format error.%v", err.Error())
+		return nil, fmt.Errorf("ingress template format error.%v", err.Error())
 	}
-	return nil
+	return
 }
 
 // @Title Get
