@@ -58,7 +58,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   getTitle() {
     let imagePrefix = this.authService.config['system.title'];
-    return imagePrefix ? imagePrefix : 'Wayne';
+    return imagePrefix ? imagePrefix : 'Mops';
   }
 
   switchNamespace(namespace: Namespace) {
