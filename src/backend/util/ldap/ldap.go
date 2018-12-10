@@ -233,7 +233,7 @@ func searchLDAP(ldapConfs models.LdapConf, ldap *goldap.Conn) (*goldap.SearchRes
 
 	var err error
 	ldapBaseDn := ldapConfs.LdapBaseDn
-	ldapScope := ldapConfs.LdapScope
+	//ldapScope := ldapConfs.LdapScope
 	ldapFilter := ldapConfs.LdapFilter
 
 	attributes := []string{"uid", "cn", "mail", "email"}
@@ -243,7 +243,7 @@ func searchLDAP(ldapConfs models.LdapConf, ldap *goldap.Conn) (*goldap.SearchRes
 	}
 	searchRequest := goldap.NewSearchRequest(
 		ldapBaseDn,
-		ldapScope,
+		goldap.ScopeWholeSubtree,
 		goldap.NeverDerefAliases,
 		0,     // Unlimited results.
 		0,     // Search Timeout.

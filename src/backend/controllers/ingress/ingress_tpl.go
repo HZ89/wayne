@@ -6,7 +6,7 @@ import (
 
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
-	"github.com/Qihoo360/wayne/src/backend/resources/domain"
+	//	"github.com/Qihoo360/wayne/src/backend/resources/domain"
 	"github.com/Qihoo360/wayne/src/backend/util/hack"
 	"github.com/Qihoo360/wayne/src/backend/util/logs"
 	kapiv1beta1 "k8s.io/api/extensions/v1beta1"
@@ -93,7 +93,7 @@ func (c *IngressTplController) Create() {
 		logs.Error("get body error. %v", err)
 		c.AbortBadRequestFormat("ingressTemplate")
 	}
-	_, err := validIngressTemplate(ingrTpl.Template)
+	_, err = validIngressTemplate(ingrTpl.Template)
 	if err != nil {
 		logs.Error("valid template err %v", err)
 		c.AbortBadRequestFormat("Kubeingress")
@@ -166,7 +166,7 @@ func (c *IngressTplController) Update() {
 		logs.Error("Invalid param body.%v", err)
 		c.AbortBadRequestFormat("IngressTemplate")
 	}
-	if err = validIngressTemplate(ingrTpl.Template); err != nil {
+	if _, err = validIngressTemplate(ingrTpl.Template); err != nil {
 		logs.Error("valid template err %v", err)
 		c.AbortBadRequestFormat("Kubeingress")
 	}
