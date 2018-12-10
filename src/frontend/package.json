@@ -1,10 +1,6 @@
 {
   "name": "frontend",
-<<<<<<< HEAD
-  "version": "1.1.0",
-=======
   "version": "1.0.0",
->>>>>>> 9cd53d5... change title name to mops
   "license": "MIT",
   "scripts": {
     "ng": "ng",
