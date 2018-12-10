@@ -30,7 +30,7 @@ export class NavComponent implements OnInit {
 
   getTitle() {
     let imagePrefix = this.authService.config['system.title'];
-    return imagePrefix ? imagePrefix : 'Wayne';
+    return imagePrefix ? imagePrefix : 'Mops';
   }
 
 }
