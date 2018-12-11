@@ -183,3 +183,20 @@ func enable() bool {
 	}
 	return true
 }
+
+func PublishEvent(data *message.HookMessageData) {
+	if !enable() {
+		return
+	}
+	dataInByte, err := json.Marshal(data)
+	if err != nil {
+		logs.Error(err)
+	}
+	msg := message.Message{
+		Type: message.TypeHook,
+		Data: json.RawMessage(dataInByte),
+	}
+	if err := bus.Notify(msg); err != nil {
+		logs.Error(err)
+	}
+}
