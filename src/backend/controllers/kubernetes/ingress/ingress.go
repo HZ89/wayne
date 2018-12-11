@@ -2,12 +2,15 @@ package ingress
 
 import (
 	"encoding/json"
+	"time"
 
+	"github.com/Qihoo360/wayne/src/backend/bus/message"
 	"github.com/Qihoo360/wayne/src/backend/client"
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
 	"github.com/Qihoo360/wayne/src/backend/resources/ingress"
 	"github.com/Qihoo360/wayne/src/backend/util/logs"
+	"github.com/Qihoo360/wayne/src/backend/workers/webhook"
 	kapiv1beta1 "k8s.io/api/extensions/v1beta1"
 )
 
@@ -88,6 +91,8 @@ func (c *KubeIngressController) Deploy() {
 		c.HandleError(err)
 		return
 	}
+	hookMessage := message.NewHookMessageData(c.NamespaceId, c.AppId, c.User.Name, c.Ctx.Input.IP(), message.PUBLISH, kubeIngress, time.Now())
+	webhook.PublishEvent(hookMessage)
 	c.Success("ok")
 }
 
