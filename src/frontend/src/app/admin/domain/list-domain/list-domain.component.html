@@ -9,16 +9,6 @@
       名称
     </ng-container>
   </clr-dg-column>
-  <clr-dg-column [clrDgField]="'app.name'" class="col-namespace">
-    <ng-container *clrDgHideableColumn="{hidden: false}">
-      所属项目
-    </ng-container>
-  </clr-dg-column>
-  <clr-dg-column class="col-metadata">
-    <ng-container *clrDgHideableColumn="{hidden: false}">
-      元数据
-    </ng-container>
-  </clr-dg-column>
   <clr-dg-column [clrDgField]="'description'">
     <ng-container *clrDgHideableColumn="{hidden: false}">
       描述
@@ -41,12 +31,6 @@
     </clr-dg-action-overflow>
     <clr-dg-cell class="col-query-id">{{domain.id}}</clr-dg-cell>
     <clr-dg-cell class="col-app-name copy"><a href="javascript:void(0)" (click)="goToLink(domain, 'tpl')">{{domain.name}}</a></clr-dg-cell>
-    <clr-dg-cell class="col-namespace"><a href="javascript:void(0)" (click)="goToLink(domain, 'app')">{{domain.app.name}}</a></clr-dg-cell>
-    <clr-dg-cell class="col-metadata">
-      <div class="text-overflow">
-        <a href="javascript:;" (click)="detailMetaDataTpl(domain.metaData)">{{domain.metaData}}</a>
-      </div>
-    </clr-dg-cell>
     <clr-dg-cell>{{domain.description}}</clr-dg-cell>
     <clr-dg-cell>{{domain.user}}</clr-dg-cell>
     <clr-dg-cell class="col-time">{{domain.createTime | date:'yyyy-MM-dd HH:mm'}}</clr-dg-cell>

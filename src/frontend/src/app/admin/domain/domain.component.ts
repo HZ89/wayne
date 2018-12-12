@@ -44,7 +44,7 @@ export class DomainComponent implements OnInit, OnDestroy {
         message.state === ConfirmationState.CONFIRMED &&
         message.source === ConfirmationTargets.INGRESS) {
         let id = message.data;
-        this.domainService.deleteById(id, 0)
+        this.domainService.deleteById(id)
           .subscribe(
             response => {
               this.messageHandlerService.showSuccess('Domain 删除成功！');
@@ -77,7 +77,7 @@ export class DomainComponent implements OnInit, OnDestroy {
     if (state) {
       this.pageState = PageState.fromState(state, {totalPage: this.pageState.page.totalPage, totalCount: this.pageState.page.totalCount});
     }
-    this.domainService.list(this.pageState, 'false', this.appId)
+    this.domainService.list(this.pageState, 'true')
       .subscribe(
         response => {
           const data = response.data;

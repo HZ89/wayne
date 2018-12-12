@@ -63,10 +63,6 @@ export class ListDomainComponent implements OnInit {
         this.breadcrumbService.addFriendlyNameForRouteRegex('/admin/domain/relate-tpl/[0-9]*', '[' + domain.name + ']模板列表');
         linkUrl = ['admin', 'service', 'relate-tpl', domain.id];
         break;
-      case 'app':
-        this.breadcrumbService.addFriendlyNameForRouteRegex('/admin/domain/app/[0-9]*', '[' + domain.app.name + ']项目详情');
-        linkUrl = ['admin', 'service', 'app', domain.app.id];
-        break;
       default:
         break;
     }

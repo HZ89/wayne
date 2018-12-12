@@ -1,15 +1,11 @@
-import { App } from './app';
-
 export class Domain {
   id: number;
   name: string;
-  metaData: string;
-  user: string;
-  appId: number;
-  metaDataObj: {};
-  description: string;
-  deleted: boolean;
+  provider: "aliCloud";
+  accessKeyId: string;
+  accessKey: string;
   createTime: Date;
-  app: App;
-  order: number;
+  updateTime: Date;
+  user: string;
+  deleted: boolean;
 }

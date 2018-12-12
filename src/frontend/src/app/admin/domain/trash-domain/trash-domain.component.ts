@@ -33,7 +33,7 @@ export class TrashDomainComponent implements OnInit, OnDestroy {
         message.state === ConfirmationState.CONFIRMED &&
         message.source === ConfirmationTargets.TRASH_SERVICE) {
         let id = message.data;
-        this.domainService.deleteById(id, 0, false)
+        this.domainService.deleteById(id, false)
           .subscribe(
             response => {
               this.messageHandlerService.showSuccess('Domain 删除成功！');
@@ -92,7 +92,6 @@ export class TrashDomainComponent implements OnInit, OnDestroy {
   }
 
   recoverDomain(domain: Domain) {
-    domain.deleted = false;
     this.domainService
       .update(domain)
       .subscribe(
