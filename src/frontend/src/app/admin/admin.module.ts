@@ -38,6 +38,8 @@ import { IngressModule } from './ingress/ingress.module';
 import { IngressTplModule } from './ingresstpl/ingresstpl.module';
 import { KubeDeploymentModule } from './kubernetes/deployment/kube-deployment.module';
 import { TplDetailModule } from '../shared/tpl-detail/tpl-detail.module';
+import { DomainModule } from './domain/domain.module';
+import { DomainTplModule } from './domaintpl/domaintpl.module';
 
 @NgModule({
   imports: [
@@ -76,7 +78,9 @@ import { TplDetailModule } from '../shared/tpl-detail/tpl-detail.module';
     IngressModule,
     IngressTplModule,
     KubeDeploymentModule,
-    TplDetailModule
+    TplDetailModule,
+    DomainModule,
+    DomainTplModule
   ],
   providers: [
     AdminAuthCheckGuard,
