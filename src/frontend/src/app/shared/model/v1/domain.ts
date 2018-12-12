@@ -7,5 +7,4 @@ export class Domain {
   createTime: Date;
   updateTime: Date;
   user: string;
-  deleted: boolean;
 }

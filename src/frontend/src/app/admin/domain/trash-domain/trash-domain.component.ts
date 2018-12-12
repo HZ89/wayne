@@ -68,7 +68,7 @@ export class TrashDomainComponent implements OnInit, OnDestroy {
       this.state = state;
       this.pageState = PageState.fromState(state, {totalPage: this.pageState.page.totalPage, totalCount: this.pageState.page.totalCount});
     }
-    this.domainService.list(this.pageState, 'true')
+    this.domainService.list(this.pageState)
       .subscribe(
         response => {
           let data = response.data;
