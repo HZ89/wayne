@@ -25,9 +25,6 @@ export class CreateEditDomainComponent implements OnInit{
   @ViewChild('ngForm')
   currentForm: NgForm;
 
-  @ViewChild(AceEditorBoxComponent)
-  aceBox: any;
-
   domain: Domain = new Domain();
   checkOnGoing = false;
   isSubmitOnGoing  = false;
@@ -40,7 +37,6 @@ export class CreateEditDomainComponent implements OnInit{
 
   constructor(private domainService: DomainService,
               private appService: AppService,
-              private aceEditorService: AceEditorService,
               private messageHandlerService: MessageHandlerService) {
   }
 
@@ -53,6 +49,7 @@ export class CreateEditDomainComponent implements OnInit{
         },
         error => this.messageHandlerService.handleError(error)
       );
+    this.domain.provider = "aliCloud";
   }
 
   newOrEditDomain(id?: number) {
@@ -60,10 +57,9 @@ export class CreateEditDomainComponent implements OnInit{
     if (id) {
       this.actionType = ActionType.EDIT;
       this.title = '编辑 Domain';
-      this.domainService.getById(id, 0).subscribe(
+      this.domainService.getById(id).subscribe(
         status => {
-          this.domain = status.data
-          this.domain.metaDataObj = JSON.parse(this.domain.metaData ? this.domain.metaData : '{}');
+          this.domain = status.data;
           this.initJsonEditor();
         },
         error => {
@@ -74,13 +70,12 @@ export class CreateEditDomainComponent implements OnInit{
       this.actionType = ActionType.ADD_NEW;
       this.title = '创建 Domain';
       this.domain = new Domain();
-      this.domain.metaDataObj = {};
+      this.domain.provider = 'aliCloud';
       this.initJsonEditor();
     }
   }
 
   initJsonEditor(): void {
-    this.aceEditorService.announceMessage(AceEditorMsg.Instance(this.domain.metaDataObj));
   }
 
   onCancel() {
@@ -93,7 +88,6 @@ export class CreateEditDomainComponent implements OnInit{
       return;
     }
     this.isSubmitOnGoing = true;
-    this.domain.metaData = this.aceBox.getValue();
     switch (this.actionType) {
       case ActionType.ADD_NEW:
         this.domainService.create(this.domain).subscribe(

@@ -14,24 +14,18 @@ export class DomainService {
   constructor(private http: HttpClient) {
   }
 
-  getNames(appId?: number): Observable<any> {
+  getNames(): Observable<any> {
     const params = new HttpParams();
-    if (typeof(appId) === 'undefined') {
-      appId = 0;
-    }
     return this.http
-      .get(`/api/v1/apps/${appId}/ingresses/names`, {params: params})
+      .get(`/api/v1/domain/names`, {params: params})
       .catch(error => Observable.throw(error));
   }
 
-  list(pageState: PageState, deleted?: string, appId?: string): Observable<any> {
+  list(pageState: PageState, deleted: 'true' | 'false'): Observable<any> {
     let params = new HttpParams();
     params = params.set('pageNo', pageState.page.pageNo + '');
     params = params.set('pageSize', pageState.page.pageSize + '');
     params = params.set('deleted', deleted);
-    params = params.set('relate', 'all');
-    params = params.set('appId', appId + '');
-    params = params.set('sortby', '-id');
     Object.getOwnPropertyNames(pageState.params).map(key => {
       const value = pageState.params[key];
       if (isNotEmpty(value)) {
@@ -57,33 +51,24 @@ export class DomainService {
       const sortType: any = pageState.sort.reverse ? `-${pageState.sort.by}` : pageState.sort.by;
       params = params.set('sortby', sortType);
     }
-    if ((typeof(appId) === 'undefined') || (!appId)) {
-      appId = '0';
-    }
     return this.http
-      .get(`/api/v1/apps/${appId}/ingresses`, {params: params})
+      .get(`/api/v1/domain`, {params: params})
       .catch(error => Observable.throw(error));
   }
 
-  create(ingress: Domain): Observable<any> {
+  create(domain: Domain): Observable<any> {
     return this.http
-      .post(`/api/v1/apps/${ingress.appId}/ingresses`, ingress, this.options)
+      .post(`/api/v1/domain`, domain, this.options)
       .catch(error => Observable.throw(error));
   }
 
-  update(ingress: Domain): Observable<any> {
+  update(domain: Domain): Observable<any> {
     return this.http
-      .put(`/api/v1/apps/${ingress.appId}/ingresses/${ingress.id}`, ingress, this.options)
+      .put(`/api/v1/domain/${domain.id}`, domain, this.options)
       .catch(error => Observable.throw(error));
   }
 
-  updateOrder(appId: number, orderList: Array<OrderItem>): Observable<any> {
-    return this.http
-      .put(`/api/v1/apps/${appId}/ingresses/updateorders`, orderList, this.options)
-      .catch(error => Observable.throw(error));
-  }
-
-  deleteById(id: number, appId: number, logical?: boolean): Observable<any> {
+  deleteById(id: number, logical?: boolean): Observable<any> {
     const options: any = {};
     if (logical != null) {
       let params = new HttpParams();
@@ -92,13 +77,13 @@ export class DomainService {
     }
 
     return this.http
-      .delete(`/api/v1/apps/${appId}/ingresses/${id}`, options)
+      .delete(`/api/v1/domain/${id}`, options)
       .catch(error => Observable.throw(error));
   }
 
-  getById(id: number, appId: number): Observable<any> {
+  getById(id: number): Observable<any> {
     return this.http
-      .get(`/api/v1/apps/${appId}/ingresses/${id}`)
+      .get(`/api/v1/domain/${id}`)
       .catch(error => Observable.throw(error));
   }
 }
