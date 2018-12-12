@@ -78,7 +78,7 @@ import { KubeNamespaceModule } from './kubernetes/namespace/kube-namespace.modul
     IngressModule,
     IngressTplModule,
     KubeDeploymentModule,
-    TplDetailModule
+    TplDetailModule,
   ],
   providers: [
     AdminAuthCheckGuard,
