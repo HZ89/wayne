@@ -52,7 +52,7 @@ export class ListDomainComponent implements OnInit {
     this.delete.emit(domain);
   }
 
-  editService(domain: Domain) {
+  editDomain(domain: Domain) {
     this.edit.emit(domain);
   }
 
@@ -60,7 +60,7 @@ export class ListDomainComponent implements OnInit {
     let linkUrl = new Array();
     switch (gate) {
       case 'tpl':
-        this.breadcrumbService.addFriendlyNameForRouteRegex('/admin/domain/relate-tpl/[0-9]*', '[' + domain.name + ']模板列表');
+        this.breadcrumbService.addFriendlyNameForRouteRegex('/admin/domain/record/[0-9]*', '[' + domain.name + ']模板列表');
         linkUrl = ['admin', 'service', 'relate-tpl', domain.id];
         break;
       default:

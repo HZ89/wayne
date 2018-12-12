@@ -21,11 +21,10 @@ export class DomainService {
       .catch(error => Observable.throw(error));
   }
 
-  list(pageState: PageState, deleted: 'true' | 'false'): Observable<any> {
+  list(pageState: PageState): Observable<any> {
     let params = new HttpParams();
     params = params.set('pageNo', pageState.page.pageNo + '');
     params = params.set('pageSize', pageState.page.pageSize + '');
-    params = params.set('deleted', deleted);
     Object.getOwnPropertyNames(pageState.params).map(key => {
       const value = pageState.params[key];
       if (isNotEmpty(value)) {
