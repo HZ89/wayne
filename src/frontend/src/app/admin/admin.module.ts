@@ -39,6 +39,7 @@ import { IngressTplModule } from './ingresstpl/ingresstpl.module';
 import { KubeDeploymentModule } from './kubernetes/deployment/kube-deployment.module';
 import { TplDetailModule } from '../shared/tpl-detail/tpl-detail.module';
 import { DomainModule } from './domain/domain.module';
+import { RecordModule } from './record/record.module';
 
 @NgModule({
   imports: [
@@ -78,7 +79,8 @@ import { DomainModule } from './domain/domain.module';
     IngressTplModule,
     KubeDeploymentModule,
     TplDetailModule,
-    DomainModule
+    DomainModule,
+    RecordModule
   ],
   providers: [
     AdminAuthCheckGuard,

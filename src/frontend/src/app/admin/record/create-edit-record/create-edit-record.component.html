@@ -1,0 +1,61 @@
+<clr-modal [(clrModalOpen)]="modalOpened"  [clrModalSize]="'lg'">
+  <h3 class="modal-title">{{title}}</h3>
+  <div class="modal-body">
+    <form #ngForm="ngForm">
+      <section class="form-block">
+        <div class="form-group" style="padding-left: 135px;">
+          <label for="name" class="col-md-3 form-group-label-override required">domainName</label>
+          <label for="name" aria-haspopup="true" class="tooltip tooltip-validation tooltip-md tooltip-bottom-left form-control">
+            <input class="form-control" type="text" id="domainName"
+                   name="domainName" size="32"
+                   required
+                   [readonly]="true"
+                   [value]="domainName">
+          </label>
+        </div>
+        <div class="form-group" style="padding-left: 135px;">
+          <label for="name" class="col-md-3 form-group-label-override required">type</label>
+          <label for="name" aria-haspopup="true" class="tooltip tooltip-validation tooltip-md tooltip-bottom-left form-control">
+            <input class="form-control" type="text" id="name"  [(ngModel)]="record.type"
+                   name="type"
+                   required>
+          </label>
+        </div>
+        <div class="form-group" style="padding-left: 135px;">
+          <label for="name" class="col-md-3 form-group-label-override required">value</label>
+          <label for="name" aria-haspopup="true" class="tooltip tooltip-validation tooltip-md tooltip-bottom-left form-control">
+            <input class="form-control" type="text" id="name"  [(ngModel)]="record.value"
+                   name="value"
+                   required>
+          </label>
+        </div>
+        <div class="form-group" style="padding-left: 135px;">
+          <label for="name" class="col-md-3 form-group-label-override required">rr</label>
+          <label for="name" aria-haspopup="true" class="tooltip tooltip-validation tooltip-md tooltip-bottom-left form-control">
+            <input class="form-control" type="text" id="name"  [(ngModel)]="record.rr"
+                   name="rr"
+                   required>
+          </label>
+        </div>
+        <div class="form-group" style="padding-left: 135px;">
+          <label for="name" class="col-md-3 form-group-label-override required">ttl</label>
+          <label for="name" aria-haspopup="true" class="tooltip tooltip-validation tooltip-md tooltip-bottom-left form-control">
+            <input class="form-control" type="number" id="name"  [(ngModel)]="record.ttl"
+                   name="ttl"
+                   required>
+          </label>
+        </div>
+        <div class="form-group" style="padding-left: 135px;">
+          <label for="name" class="col-md-3 form-group-label-override required">是否可用</label>
+          <label for="name" aria-haspopup="true" class="tooltip tooltip-validation tooltip-md tooltip-bottom-left form-control">
+            <input class="form-control" type="checkbox" id="enabled" name="enabled" [(ngModel)]="record.enabled" value="true">
+          </label>
+        </div>
+      </section>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="onCancel()">取消</button>
+    <button type="button" class="btn btn-primary" [disabled]="!isValid" (click)="onSubmit()">提交</button>
+  </div>
+</clr-modal>

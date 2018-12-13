@@ -64,6 +64,7 @@ import { IngressTplComponent } from './ingresstpl/ingresstpl.component';
 import { TrashIngressTplComponent } from './ingresstpl/trash-ingresstpl/trash-ingresstpl.component';
 import { DomainComponent } from './domain/domain.component';
 import { KubeDeploymentComponent } from './kubernetes/deployment/kube-deployment.component';
+import { RecordComponent } from './record/record.component';
 
 
 const routes: Routes = [
@@ -150,6 +151,7 @@ const routes: Routes = [
       {path: 'ingress/tpl', component: IngressTplComponent},
       {path: 'ingress/tpl/trash', component: TrashIngressTplComponent},
       {path: 'domain', component: DomainComponent},
+      {path: 'domain/record/:id', component: RecordComponent},
       {path: 'kubernetes/deployment', component: KubeDeploymentComponent},
       {path: 'kubernetes/deployment/:cluster', component: KubeDeploymentComponent},
       ...ADMINROUTES

@@ -7,47 +7,48 @@ import { ConfirmationMessage } from '../../shared/confirmation-dialog/confirmati
 import { ConfirmationButtons, ConfirmationState, ConfirmationTargets } from '../../shared/shared.const';
 import { Subscription } from 'rxjs/Subscription';
 import { MessageHandlerService } from '../../shared/message-handler/message-handler.service';
-import { ListDomainComponent } from './list-domain/list-domain.component';
-import { CreateEditDomainComponent } from './create-edit-domain/create-edit-domain.component';
-import { Domain } from '../../shared/model/v1/domain';
-import { DomainService } from '../../shared/client/v1/domain.service';
+import { ListRecordComponent } from './list-record/list-record.component';
+import { CreateEditRecordComponent } from './create-edit-record/create-edit-record.component';
+import { Record } from '../../shared/model/v1/record';
+import { RecordService } from '../../shared/client/v1/record.service';
 import { PageState } from '../../shared/page/page-state';
 
 @Component({
-  selector: 'wayne-domain',
-  templateUrl: './domain.component.html',
-  styleUrls: ['./domain.component.scss']
+  selector: 'wayne-record',
+  templateUrl: './record.component.html',
+  styleUrls: ['./record.component.scss']
 })
-export class DomainComponent implements OnInit, OnDestroy {
-  @ViewChild(ListDomainComponent)
-  list: ListDomainComponent;
-  @ViewChild(CreateEditDomainComponent)
-  createEdit: CreateEditDomainComponent;
+export class RecordComponent implements OnInit, OnDestroy {
+  @ViewChild(ListRecordComponent)
+  list: ListRecordComponent;
+  @ViewChild(CreateEditRecordComponent)
+  createEdit: CreateEditRecordComponent;
 
   pageState: PageState = new PageState();
-  domaines: Domain[];
-  appId: string;
-  componentName = 'Domain';
+  recordes: Record[];
+  id: string;
+  domainName: string;
+  componentName = 'Record';
 
   subscription: Subscription;
 
   constructor(
     private breadcrumbService: BreadcrumbService,
     private route: ActivatedRoute,
-    private domainService: DomainService,
+    private recordService: RecordService,
     private messageHandlerService: MessageHandlerService,
     private deletionDialogService: ConfirmationDialogService) {
-    breadcrumbService.addFriendlyNameForRoute('/admin/domain', this.componentName + '列表');
-    breadcrumbService.addFriendlyNameForRoute('/admin/domain/trash', '已删除' + this.componentName + '列表');
+    breadcrumbService.addFriendlyNameForRoute('/admin/record', this.componentName + '列表');
+    breadcrumbService.addFriendlyNameForRoute('/admin/record/trash', '已删除' + this.componentName + '列表');
     this.subscription = deletionDialogService.confirmationConfirm$.subscribe(message => {
       if (message &&
         message.state === ConfirmationState.CONFIRMED &&
-        message.source === ConfirmationTargets.DOMAIN) {
+        message.source === ConfirmationTargets.RECORD) {
         let id = message.data;
-        this.domainService.deleteById(id)
+        this.recordService.deleteById(this.id, id)
           .subscribe(
             response => {
-              this.messageHandlerService.showSuccess('Domain 删除成功！');
+              this.messageHandlerService.showSuccess('Record 删除成功！');
               this.retrieve();
             },
             error => {
@@ -60,9 +61,9 @@ export class DomainComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.appId = params['aid'];
-      if (typeof(this.appId) === 'undefined') {
-        this.appId = '';
+      this.id = params['id'];
+      if (typeof(this.id) === 'undefined') {
+        this.id = '';
       }
     });
   }
@@ -77,40 +78,38 @@ export class DomainComponent implements OnInit, OnDestroy {
     if (state) {
       this.pageState = PageState.fromState(state, {totalPage: this.pageState.page.totalPage, totalCount: this.pageState.page.totalCount});
     }
-    this.domainService.list(this.pageState)
+    this.recordService.list(this.pageState, this.id)
       .subscribe(
         response => {
           const data = response.data;
-          this.pageState.page.totalPage = data.totalPage;
-          this.pageState.page.totalCount = data.totalCount;
-          this.domaines = data.list;
+          this.recordes = data ? data : [] as Record[];
         },
         error => this.messageHandlerService.handleError(error)
       );
   }
 
-  createDomain(created: boolean) {
+  createRecord(created: boolean) {
     if (created) {
       this.retrieve();
     }
   }
 
   openModal(): void {
-    this.createEdit.newOrEditDomain();
+    this.createEdit.newOrEditRecord();
   }
 
-  deleteDomain(domain: Domain) {
+  deleteRecord(record: Record) {
     const deletionMessage = new ConfirmationMessage(
-      '删除 Domain 确认',
-      '你确认删除 Domain ' +  domain.name + ' ？',
-      domain.id,
-      ConfirmationTargets.DOMAIN,
+      '删除 Record 确认',
+      '你确认删除 Record ' +  record.id + ' ？',
+      record.id,
+      ConfirmationTargets.RECORD,
       ConfirmationButtons.DELETE_CANCEL
     );
     this.deletionDialogService.openComfirmDialog(deletionMessage);
   }
 
-  editDomain(domain: Domain) {
-    this.createEdit.newOrEditDomain(domain.id);
+  editRecord(record: Record) {
+    this.createEdit.newOrEditRecord(record.id);
   }
 }
