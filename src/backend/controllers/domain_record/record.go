@@ -93,7 +93,7 @@ func (c *DomainRecordController) Get() {
 		c.HandleError(err)
 		return
 	}
-	r, err := p.DescribeDomainRecordInfo(strconv.Itoa(int(rId)))
+	r, err := p.DescribeDomainRecordInfo(strconv.FormatInt(rId, 10))
 	if err != nil {
 		logs.Error("get domain(%s) provider(%s) record failed: %s", d.Name, d.Provider, err.Error())
 		c.HandleError(err)
