@@ -184,7 +184,7 @@ func (c *DomainController) Update() {
 }
 
 // @Title Delete
-// @Description delete the Doamin
+// @Description delete the Domain
 // @Param	id		path 	int	true		"The id you want to delete"
 // @Param	logical		query 	bool	false		"is logical deletion,default true"
 // @Success 200 {string} delete success!
