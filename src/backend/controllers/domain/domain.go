@@ -188,13 +188,11 @@ func (c *DomainController) Update() {
 // @Param	id		path 	int	true		"The id you want to delete"
 // @Param	logical		query 	bool	false		"is logical deletion,default true"
 // @Success 200 {string} delete success!
-// @router /:id([0-9]+) [delete]
+// @router /:id([0-9]+)
 func (c *DomainController) Delete() {
 	id := c.GetIDFromURL()
 
-	logical := c.GetLogicalFromQuery()
-
-	err := models.DomainModel.DeleteById(int64(id), logical)
+	err := models.DomainModel.DeleteById(int64(id), false)
 	if err != nil {
 		logs.Error("delete %d error.%v", id, err)
 		c.HandleError(err)
