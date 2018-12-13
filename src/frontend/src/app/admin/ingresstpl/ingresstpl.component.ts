@@ -97,7 +97,7 @@ export class IngressTplComponent implements OnInit, OnDestroy {
   }
 
   openModal(): void {
-    this.createEdit.newOrEditServiceTpl();
+    this.createEdit.newOrEditIngressTpl();
   }
 
   deleteIngressTpl(ingressTpl: IngressTpl) {
@@ -112,6 +112,6 @@ export class IngressTplComponent implements OnInit, OnDestroy {
   }
 
   editIngressTpl(ingressTpl: IngressTpl) {
-    this.createEdit.newOrEditServiceTpl(ingressTpl.id);
+    this.createEdit.newOrEditIngressTpl(ingressTpl.id);
   }
 }

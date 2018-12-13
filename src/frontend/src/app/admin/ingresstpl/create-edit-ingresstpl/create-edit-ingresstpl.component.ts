@@ -60,7 +60,7 @@ export class CreateEditIngressTplComponent implements OnInit{
     this.aceEditorService.announceMessage(AceEditorMsg.Instance(json));
   }
 
-  newOrEditServiceTpl(id?: number) {
+  newOrEditIngressTpl(id?: number) {
     this.modalOpened = true;
     if (id) {
       this.actionType = ActionType.EDIT;
