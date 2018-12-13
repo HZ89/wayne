@@ -6,6 +6,8 @@ import (
 
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
+	"github.com/Qihoo360/wayne/src/backend/resources/domain"
+
 	//	"github.com/Qihoo360/wayne/src/backend/resources/domain"
 	"github.com/Qihoo360/wayne/src/backend/util/hack"
 	"github.com/Qihoo360/wayne/src/backend/util/logs"
@@ -88,32 +90,64 @@ func (c *IngressTplController) List() {
 // @router / [post]
 func (c *IngressTplController) Create() {
 	var ingrTpl models.IngressTemplate
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ingrTpl)
+
+	app, err := models.AppModel.GetById(c.AppId)
+	if err != nil {
+		logs.Error("app id: %d not exists", c.AppId)
+		c.AbortBadRequest("app not exists")
+	}
+	namespace := app.Namespace.Name
+
+	err = json.Unmarshal(c.Ctx.Input.RequestBody, &ingrTpl)
 	if err != nil {
 		logs.Error("get body error. %v", err)
 		c.AbortBadRequestFormat("ingressTemplate")
 	}
-	_, err = validIngressTemplate(ingrTpl.Template)
+	ingrConf, err := validIngressTemplate(ingrTpl.Template)
 	if err != nil {
 		logs.Error("valid template err %v", err)
 		c.AbortBadRequestFormat("Kubeingress")
 	}
-	//addDoaminRecord := c.GetBoolParamFromQuery("addDomainRecord")
-	//if addDoaminRecord{
-	//	for _, rule := range ingrConf.Spec.Rules {
-	//		domainName, err := models.DomainModel.GetByName(rule.Host)
-	//		if err != nil {
-	//			logs.Error("find domainName failed: %s", err.Error())
-	//			c.AbortInternalServerError("kubeingress")
-	//		}
-	//		p, err := domain.NewProvider(domainName.Provider, domainName.AccessKeyId, domainName.AccessKey)
-	//		if err != nil {
-	//			logs.Error("new domain provider failed: %s", err.Error())
-	//			c.AbortInternalServerError("kubeingress")
-	//		}
-	//
-	//	}
-	//}
+	//TODO: use a webhook to  trigger this action execution may be a better way
+	addDomainRecord := c.GetBoolParamFromQuery("addDomainRecord")
+	if addDomainRecord {
+		for i, rule := range ingrConf.Spec.Rules {
+			domainName, err := models.DomainModel.GetByName(rule.Host)
+			if err != nil {
+				logs.Error("find domainName failed: %s", err.Error())
+				c.AbortInternalServerError("kubeingress")
+			}
+
+			p, err := domain.NewProvider(domainName.Provider, domainName.AccessKeyId, domainName.AccessKey)
+			if err != nil {
+				logs.Error("new domain provider failed: %s", err.Error())
+				c.AbortInternalServerError("kubeingress")
+				return
+			}
+			ok, err := p.IsDomainAvailable(domainName.Name)
+			if err != nil {
+				logs.Error("check domain failed: %v", err)
+				c.AbortInternalServerError("check domain failed")
+				return
+			}
+			if !ok {
+				c.AbortBadRequest("request domain not available")
+				return
+			}
+
+			var service string
+			for _, path := range rule.HTTP.Paths {
+				if path.Path == "/" {
+					service = path.Backend.ServiceName
+					break
+				}
+			}
+			if service == "" {
+				service = rule.HTTP.Paths[0].Backend.ServiceName
+			}
+			ingrConf.Spec.Rules[i].Host = fmt.Sprintf("%s-%s.%s", service, namespace, domainName.Name)
+		}
+	}
 
 	ingrTpl.User = c.User.Name
 
