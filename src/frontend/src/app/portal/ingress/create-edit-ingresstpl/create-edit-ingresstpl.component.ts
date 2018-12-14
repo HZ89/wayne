@@ -14,7 +14,12 @@ import { IngressTpl } from '../../../shared/model/v1/ingresstpl';
 import { IngressService } from '../../../shared/client/v1/ingress.service';
 import { IngressTplService } from '../../../shared/client/v1/ingresstpl.service';
 import { AuthService } from '../../../shared/auth/auth.service';
-import { CreateEditResourceTemplate } from '../../../shared/base/resource/create-edit-resource-template';
+import { IngressRule, KubeIngress } from '../../../shared/model/v1/kubernetes/ingress';
+import { DomainService } from 'app/shared/client/v1/domain.service';
+import { Domain } from 'domain';
+import { App } from 'app/shared/model/v1/app';
+import { Ingress } from 'app/shared/model/v1/ingress';
+import { CreateEditResourceTemplate } from 'app/shared/base/resource/create-edit-resource-template';
 
 
 @Component({
@@ -24,6 +29,14 @@ import { CreateEditResourceTemplate } from '../../../shared/base/resource/create
 })
 export class CreateEditIngressTplComponent extends CreateEditResourceTemplate implements OnInit {
   actionType: ActionType;
+  app: App;
+  ingress: Ingress;
+  kubeIngress: KubeIngress;
+  addDomainText: string = "自动解析";
+  addDomain: boolean = true;
+  domaines: Domain[];
+
+  labelSelector = [];
 
 
   constructor(private ingressTplService: IngressTplService,
@@ -35,7 +48,8 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
               public authService: AuthService,
               public cacheService: CacheService,
               public aceEditorService: AceEditorService,
-              public messageHandlerService: MessageHandlerService
+              public messageHandlerService: MessageHandlerService,
+              private domainService: DomainService
   ) {
     super(
       ingressTplService,
@@ -51,7 +65,17 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
     );
     super.registResourceType('ingress');
     super.registDefaultKubeResource(defaultIngress);
-    this.template = new IngressTpl();
+    this.template = new IngressTpl()
+  }
+
+  initDefault() {
+    this.kubeIngress = JSON.parse(defaultIngress);
+    console.log(this.kubeIngress);
+  }
+
+
+  onAddSelector() {
+    this.labelSelector.push({'key': '', 'value': ''});
   }
 
   ngOnInit(): void {
@@ -86,6 +110,10 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
         this.messageHandlerService.handleError(error);
       }
     );
+    this.domainService.getNames().subscribe(res => {
+      this.domaines = res.data;
+    })
+    this.initDefault();
   }
 
   isValidResource(): boolean {
@@ -131,7 +159,7 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
 
     this.template.id = undefined;
     this.template.name = this.resource.name;
-    this.templateService.create(this.template, this.app.id).subscribe(
+    this.ingressTplService.createWithDomain(this.template, this.app.id, this.addDomain).subscribe(
       status => {
         this.isSubmitOnGoing = false;
         this.router.navigate(
@@ -146,6 +174,12 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
 
       }
     );
+  }
+
+  changeAddDomain(i: number) {
+    this.addDomain = !this.addDomain;
+    this.addDomainText = this.addDomain ? "自动解析" : "手动填写";
+    this.kubeIngress.spec.rules[i].host = "";
   }
 }
 

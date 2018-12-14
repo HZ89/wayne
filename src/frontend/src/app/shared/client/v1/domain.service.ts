@@ -1,30 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/throw';
-import { IngressTpl } from '../../model/v1/ingresstpl';
-import { isNotEmpty } from '../../utils';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { PageState } from '../../page/page-state';
+import { isNotEmpty } from '../../utils';
+import { OrderItem } from '../../model/v1/order';
+import { Domain } from '../../model/v1/domain';
 
 @Injectable()
-export class IngressTplService {
+export class DomainService {
   headers = new HttpHeaders({'Content-type': 'application/json'});
   options = {'headers': this.headers};
 
   constructor(private http: HttpClient) {
   }
 
-  listPage(pageState: PageState, appId?: number, ingressId?: string): Observable<any> {
+  getNames(): Observable<any> {
+    const params = new HttpParams();
+    return this.http
+      .get(`/api/v1/domain/names`, {params: params})
+      .catch(error => Observable.throw(error));
+  }
+
+  list(pageState: PageState): Observable<any> {
     let params = new HttpParams();
     params = params.set('pageNo', pageState.page.pageNo + '');
     params = params.set('pageSize', pageState.page.pageSize + '');
-    params = params.set('sortby', '-id');
-    if ((typeof(appId) === 'undefined') || (!appId)) {
-      appId = 0;
-    }
-    params = params.set('ingressId', ingressId === undefined ? '' : ingressId.toString());
     Object.getOwnPropertyNames(pageState.params).map(key => {
       const value = pageState.params[key];
       if (isNotEmpty(value)) {
@@ -45,50 +45,44 @@ export class IngressTplService {
     if (filterList.length) {
       params = params.set('filter', filterList.join(','));
     }
-    if (Object.keys(pageState.sort).length !== 0) {
+    // sort param
+    if (Object.keys(pageState.sort).length !== 0 && pageState.sort.by !== 'app.name') {
       const sortType: any = pageState.sort.reverse ? `-${pageState.sort.by}` : pageState.sort.by;
       params = params.set('sortby', sortType);
     }
-
     return this.http
-      .get(`/api/v1/apps/${appId}/ingresses/tpls`, {params: params})
+      .get(`/api/v1/domain`, {params: params})
       .catch(error => Observable.throw(error));
   }
 
-  create(ingressTpl: IngressTpl, appId: number): Observable<any> {
+  create(domain: Domain): Observable<any> {
     return this.http
-      .post(`/api/v1/apps/${appId}/ingresses/tpls`, ingressTpl, this.options)
+      .post(`/api/v1/domain`, domain, this.options)
       .catch(error => Observable.throw(error));
   }
 
-  createWithDomain(ingressTpl: IngressTpl, appId: number, flag: boolean): Observable<any> {
+  update(domain: Domain): Observable<any> {
     return this.http
-      .post(`/api/v1/apps/${appId}/ingresses/tpls/addDomainName/${flag}`, ingressTpl, this.options)
-      .catch(error => Observable.throw(error))
-  }
-
-  update(ingressTpl: IngressTpl, appId: number): Observable<any> {
-    return this.http
-      .put(`/api/v1/apps/${appId}/ingresses/tpls/${ingressTpl.id}`, ingressTpl, this.options)
+      .put(`/api/v1/domain/${domain.id}`, domain, this.options)
       .catch(error => Observable.throw(error));
   }
 
-  deleteById(id: number, appId: number, logical?: boolean): Observable<any> {
+  deleteById(id: number, logical?: boolean): Observable<any> {
     const options: any = {};
     if (logical != null) {
       let params = new HttpParams();
       params = params.set('logical', logical + '');
-      options.params = params;
+      options.params = params
     }
 
     return this.http
-      .delete(`/api/v1/apps/${appId}/ingresses/tpls/${id}`, options)
+      .delete(`/api/v1/domain/${id}`, options)
       .catch(error => Observable.throw(error));
   }
 
-  getById(id: number, appId: number): Observable<any> {
+  getById(id: number): Observable<any> {
     return this.http
-      .get(`/api/v1/apps/${appId}/ingresses/tpls/${id}`)
+      .get(`/api/v1/domain/${id}`)
       .catch(error => Observable.throw(error));
   }
 }

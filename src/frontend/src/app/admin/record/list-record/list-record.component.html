@@ -1,0 +1,50 @@
+<clr-datagrid (clrDgRefresh)="refresh($event)">
+  <clr-dg-column [clrDgField]="'id'" class="col-query-id">
+    <ng-container *clrDgHideableColumn="{hidden: false}">
+      ID
+    </ng-container>
+  </clr-dg-column>
+  <clr-dg-column [clrDgField]="'domainName'" class="col-app-name">
+    <ng-container *clrDgHideableColumn="{hidden: false}">
+      domainName
+    </ng-container>
+  </clr-dg-column>
+  <clr-dg-column [clrDgField]="'type'" class="col-app-name">
+    <ng-container *clrDgHideableColumn="{hidden: false}">
+      type
+    </ng-container>
+  </clr-dg-column>
+  <clr-dg-column [clrDgField]="'value'">
+    <ng-container *clrDgHideableColumn="{hidden: false}">
+      value
+    </ng-container>
+  </clr-dg-column>
+  <clr-dg-column [clrDgField]="'rr'">
+    <ng-container *clrDgHideableColumn="{hidden: false}">
+      rr
+    </ng-container>
+  </clr-dg-column>
+  <clr-dg-column [clrDgSortBy]="'ttl'">
+    <ng-container *clrDgHideableColumn="{hidden: false}">
+      ttl
+    </ng-container>
+  </clr-dg-column>
+  <clr-dg-column [clrDgSortBy]="'enabled'">
+    <ng-container *clrDgHideableColumn="{hidden: false}">
+      是否可用
+    </ng-container>
+  </clr-dg-column>
+  <clr-dg-row *ngFor="let record of recordes" [clrDgItem]="record">
+    <clr-dg-action-overflow >
+      <button class="action-item" (click)="editRecord(record)" >编辑</button>
+      <button class="action-item" (click)="deleteRecord(record)">删除</button>
+    </clr-dg-action-overflow>
+    <clr-dg-cell class="col-query-id">{{record.id}}</clr-dg-cell>
+    <clr-dg-cell class="col-app-name copy"><a href="javascript:void(0)">{{record.domainName}}</a></clr-dg-cell>
+    <clr-dg-cell>{{record.type}}</clr-dg-cell>
+    <clr-dg-cell>{{record.value}}</clr-dg-cell>
+    <clr-dg-cell>{{record.rr}}</clr-dg-cell>
+    <clr-dg-cell>{{record.ttl}}</clr-dg-cell>
+    <clr-dg-cell>{{record.enabled}}</clr-dg-cell>
+  </clr-dg-row>
+</clr-datagrid>

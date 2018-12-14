@@ -118,6 +118,8 @@ export const enum ConfirmationTargets {
   INGRESS_TPL,
   TRASH_INGRESS,
   TRASH_INGRESS_TPL,
+  DOMAIN,
+  RECORD,
   CONFIGMAP,
   TRASH_CONFIGMAP,
   CONFIGMAP_TPL,

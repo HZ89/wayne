@@ -2,26 +2,26 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BreadcrumbService } from '../../../shared/client/v1/breadcrumb.service';
 import { Router } from '@angular/router';
 import { State } from '@clr/angular';
-import { Ingress } from '../../../shared/model/v1/ingress';
+import { Domain } from '../../../shared/model/v1/domain';
 import { Page } from '../../../shared/page/page-state';
 import { AceEditorService } from '../../../shared/ace-editor/ace-editor.service';
 import { AceEditorMsg } from '../../../shared/ace-editor/ace-editor';
 
 @Component({
-  selector: 'list-ingress',
-  templateUrl: 'list-ingress.component.html'
+  selector: 'list-domain',
+  templateUrl: 'list-domain.component.html'
 })
-export class ListIngressComponent implements OnInit {
+export class ListDomainComponent implements OnInit {
 
-  @Input() ingresses: Ingress[];
+  @Input() domaines: Domain[];
 
   @Input() page: Page;
   currentPage = 1;
   state: State;
 
   @Output() paginate = new EventEmitter<State>();
-  @Output() delete = new EventEmitter<Ingress>();
-  @Output() edit = new EventEmitter<Ingress>();
+  @Output() delete = new EventEmitter<Domain>();
+  @Output() edit = new EventEmitter<Domain>();
 
 
   constructor(
@@ -29,8 +29,8 @@ export class ListIngressComponent implements OnInit {
     private router: Router,
     private aceEditorService: AceEditorService
   ) {
-    breadcrumbService.hideRoute('/admin/ingress/relate-tpl');
-    breadcrumbService.hideRoute('/admin/ingress/app');
+    breadcrumbService.hideRoute('/admin/domain/relate-tpl');
+    breadcrumbService.hideRoute('/admin/domain/app');
   }
 
   ngOnInit(): void {
@@ -48,24 +48,20 @@ export class ListIngressComponent implements OnInit {
     this.paginate.emit(state);
   }
 
-  deleteIngress(ingress: Ingress) {
-    this.delete.emit(ingress);
+  deleteDomain(domain: Domain) {
+    this.delete.emit(domain);
   }
 
-  editIngress(ingress: Ingress) {
-    this.edit.emit(ingress);
+  editDomain(domain: Domain) {
+    this.edit.emit(domain);
   }
 
-  goToLink(ingress: Ingress, gate: string) {
+  goToLink(domain: Domain, gate: string) {
     let linkUrl = new Array();
     switch (gate) {
       case 'tpl':
-        this.breadcrumbService.addFriendlyNameForRouteRegex('/admin/ingress/relate-tpl/[0-9]*', '[' + ingress.name + ']模板列表');
-        linkUrl = ['admin', 'service', 'relate-tpl', ingress.id];
-        break;
-      case 'app':
-        this.breadcrumbService.addFriendlyNameForRouteRegex('/admin/ingress/app/[0-9]*', '[' + ingress.app.name + ']项目详情');
-        linkUrl = ['admin', 'service', 'app', ingress.app.id];
+        this.breadcrumbService.addFriendlyNameForRouteRegex('/admin/domain/record/[0-9]*', '[' + domain.name + ']模板列表');
+        linkUrl = ['admin', 'domain', 'record', domain.id];
         break;
       default:
         break;

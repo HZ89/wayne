@@ -24,7 +24,13 @@
           <label aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation tooltip-md tooltip-bottom-left">
             <input type="text" style="width: 217px"
                    [ngModelOptions]="{standalone: true}"
-            [(ngModel)]="kubeResource.spec.rules[i].host">
+            [(ngModel)]="kubeIngress.spec.rules[i].host" *ngIf="addDomain">
+            <select class="costom-select form-control" *ngIf="!addDomain" style="width: 217px" [(ngModel)]="kubeIngress.spec.rules[i].host" [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let domain of domaines" [value]="domain.name">{{domain.name}}</option>
+            </select>
+          </label>
+          <label class="col-md-1">
+            <button type="button" class="btn btn-outline" (click)="changeAddDomain(i)">{{addDomainText}}</button>
           </label>
         </div>
           <div class="form-group form-group-padding" >
@@ -51,7 +57,7 @@
     <div class="clr-wizard-footer-buttons" style="padding-top: 30px">
       <button type="button" class="btn btn-outline" (click)="onCancel()">取消</button>
       <button type="button" class="btn btn-primary" (click)="onOpenModal()">高级配置</button>
-      <button type="button" class="btn btn-primary" [disabled]="!isValid" (click)="onSubmit()">提交</button>
+      <button type="button" class="btn btn-primary" [disabled]="!isValidResource" (click)="onSubmit()">提交</button>
     </div>
   </form>
 </div>
