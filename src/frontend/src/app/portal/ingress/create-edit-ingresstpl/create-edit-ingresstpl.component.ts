@@ -120,42 +120,7 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
     if (super.isValidResource() === false) {
       return false;
     }
-<<<<<<< HEAD
     if (this.kubeResource.spec.rules.length === 0) {
-=======
-    this.isSubmitOnGoing = true;
-
-    let newIngress = JSON.parse(JSON.stringify(this.kubeIngress));
-    newIngress = this.generateIngress(newIngress);
-    this.ingressTpl.ingressId = this.ingress.id;
-    this.ingressTpl.template = JSON.stringify(newIngress);
-
-    this.ingressTpl.id = undefined;
-    this.ingressTpl.name = this.ingress.name;
-    this.ingressTplService.createWithDomain(this.ingressTpl, this.app.id, !this.addDomain).subscribe(
-      status => {
-        this.isSubmitOnGoing = false;
-        this.messageHandlerService.showSuccess('创建 Ingress 模版成功！');
-        this.router.navigate([`portal/namespace/${this.cacheService.namespaceId}/app/${this.app.id}/ingress/${this.ingress.id}`]);
-      },
-      error => {
-        this.isSubmitOnGoing = false;
-        this.messageHandlerService.handleError(error);
-
-      }
-    );
-  }
-
-  public get isValid(): boolean {
-    return this.currentForm &&
-      this.currentForm.valid &&
-      !this.isSubmitOnGoing &&
-      !this.checkOnGoing && this.isValidIngress();
-  }
-
-  isValidIngress(): boolean {
-    if (this.kubeIngress.spec.rules.length === 0) {
->>>>>>> make new ingresstpl post in portal
       return false;
     }
     if (this.kubeResource.spec.rules.length === 0) {
@@ -194,7 +159,7 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
 
     this.template.id = undefined;
     this.template.name = this.resource.name;
-    this.templateService.create(this.template, this.app.id).subscribe(
+    this.ingressTplService.createWithDomain(this.template, this.app.id, this.addDomain).subscribe(
       status => {
         this.isSubmitOnGoing = false;
         this.router.navigate(
