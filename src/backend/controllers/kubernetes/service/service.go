@@ -121,7 +121,7 @@ func (c *KubeServiceController) Get() {
 	name := c.Ctx.Input.Param(":service")
 	cli, err := client.Client(cluster)
 	if err == nil {
-		result, err := service.GetServiceDetail(cli, name, namespace)
+		result, err := service.GetService(cli, name, namespace)
 		if err != nil {
 			logs.Error("get kubernetes service detail error.", cluster, namespace, name, err)
 			c.HandleError(err)
