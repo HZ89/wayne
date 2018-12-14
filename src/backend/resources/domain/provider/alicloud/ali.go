@@ -138,11 +138,14 @@ func (c *aliCloud) DescribeDomainRecordInfo(id string) (r *domain.Record, err er
 		logs.Debug("ali dns api failed request id: %s", res.RequestId)
 		return nil, err
 	}
-	r.Id = res.RecordId
-	r.DomainName = res.DomainName
-	r.Value = res.Value
-	r.Type = res.Type
-	r.Enabled = true
+	r = &domain.Record{
+		Id:         res.RecordId,
+		DomainName: res.DomainName,
+		Value:      res.Value,
+		Type:       res.Type,
+		Enabled:    true,
+	}
+
 	if res.Status == "Disable" {
 		r.Enabled = false
 	}
