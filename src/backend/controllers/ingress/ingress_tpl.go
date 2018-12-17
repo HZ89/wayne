@@ -6,9 +6,6 @@ import (
 
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
-	"github.com/Qihoo360/wayne/src/backend/resources/domain"
-
-	//	"github.com/Qihoo360/wayne/src/backend/resources/domain"
 	"github.com/Qihoo360/wayne/src/backend/util/hack"
 	"github.com/Qihoo360/wayne/src/backend/util/logs"
 	kapiv1beta1 "k8s.io/api/extensions/v1beta1"
@@ -91,62 +88,15 @@ func (c *IngressTplController) List() {
 func (c *IngressTplController) Create() {
 	var ingrTpl models.IngressTemplate
 
-	app, err := models.AppModel.GetById(c.AppId)
-	if err != nil {
-		logs.Error("app id: %d not exists", c.AppId)
-		c.AbortBadRequest("app not exists")
-	}
-	namespace := app.Namespace.Name
-
-	err = json.Unmarshal(c.Ctx.Input.RequestBody, &ingrTpl)
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &ingrTpl)
 	if err != nil {
 		logs.Error("get body error. %v", err)
 		c.AbortBadRequestFormat("ingressTemplate")
 	}
-	ingrConf, err := validIngressTemplate(ingrTpl.Template)
+	err = validIngressTemplate(ingrTpl.Template)
 	if err != nil {
 		logs.Error("valid template err %v", err)
 		c.AbortBadRequestFormat("Kubeingress")
-	}
-	//TODO: use a webhook to  trigger this action execution may be a better way
-	addDomainRecord := c.GetBoolParamFromQuery("addDomainRecord")
-	if addDomainRecord {
-		for i, rule := range ingrConf.Spec.Rules {
-			domainName, err := models.DomainModel.GetByName(rule.Host)
-			if err != nil {
-				logs.Error("find domainName failed: %s", err.Error())
-				c.AbortInternalServerError("kubeingress")
-			}
-
-			p, err := domain.NewProvider(domainName.Provider, domainName.AccessKeyId, domainName.AccessKey)
-			if err != nil {
-				logs.Error("new domain provider failed: %s", err.Error())
-				c.AbortInternalServerError("kubeingress")
-				return
-			}
-			ok, err := p.IsDomainAvailable(domainName.Name)
-			if err != nil {
-				logs.Error("check domain failed: %v", err)
-				c.AbortInternalServerError("check domain failed")
-				return
-			}
-			if !ok {
-				c.AbortBadRequest("request domain not available")
-				return
-			}
-
-			var service string
-			for _, path := range rule.HTTP.Paths {
-				if path.Path == "/" {
-					service = path.Backend.ServiceName
-					break
-				}
-			}
-			if service == "" {
-				service = rule.HTTP.Paths[0].Backend.ServiceName
-			}
-			ingrConf.Spec.Rules[i].Host = fmt.Sprintf("%s-%s.%s", service, namespace, domainName.Name)
-		}
 	}
 
 	ingrTpl.User = c.User.Name
@@ -160,10 +110,11 @@ func (c *IngressTplController) Create() {
 	c.Success(ingrTpl)
 }
 
-func validIngressTemplate(ingrTplStr string) (ingr *kapiv1beta1.Ingress, err error) {
+func validIngressTemplate(ingrTplStr string) (err error) {
+	var ingr kapiv1beta1.Ingress
 	err = json.Unmarshal(hack.Slice(ingrTplStr), &ingr)
 	if err != nil {
-		return nil, fmt.Errorf("ingress template format error.%v", err.Error())
+		return fmt.Errorf("ingress template format error.%v", err.Error())
 	}
 	return
 }
@@ -200,7 +151,7 @@ func (c *IngressTplController) Update() {
 		logs.Error("Invalid param body.%v", err)
 		c.AbortBadRequestFormat("IngressTemplate")
 	}
-	if _, err = validIngressTemplate(ingrTpl.Template); err != nil {
+	if err = validIngressTemplate(ingrTpl.Template); err != nil {
 		logs.Error("valid template err %v", err)
 		c.AbortBadRequestFormat("Kubeingress")
 	}

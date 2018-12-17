@@ -2,9 +2,6 @@ package ingress
 
 import (
 	"encoding/json"
-	"time"
-
-	"github.com/Qihoo360/wayne/src/backend/bus/message"
 	"github.com/Qihoo360/wayne/src/backend/client"
 	"github.com/Qihoo360/wayne/src/backend/controllers/base"
 	"github.com/Qihoo360/wayne/src/backend/models"
@@ -107,7 +104,7 @@ func (c *KubeIngressController) Deploy() {
 		}
 	}()
 	// ingressDetail include endpoints
-	ingressDetail, err := ingress.CreateOrUpdateIngress(manager.Client, &kubeIngress)
+	_, err = ingress.CreateOrUpdateIngress(manager.Client, &kubeIngress)
 	if err != nil {
 		publishHistory.Status = models.ReleaseFailure
 		publishHistory.Message = err.Error()
