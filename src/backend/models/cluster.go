@@ -58,6 +58,7 @@ type Cluster struct {
 	MetaData    string     `orm:"null;type(text)" json:"metaData,omitempty"`
 	Master      string     `orm:"size(128)" json:"master,omitempty"` // apiserver地址，示例： https://10.172.189.140
 	KubeConfig  string     `orm:"null;type(text)" json:"kubeConfig,omitempty"`
+	ExternalLb  string     `orm:"null;size(128)" json:"externalLb"`
 	Description string     `orm:"null;size(512)" json:"description,omitempty"`
 	CreateTime  *time.Time `orm:"auto_now_add;type(datetime)" json:"createTime,omitempty"`
 	UpdateTime  *time.Time `orm:"auto_now;type(datetime)" json:"updateTime,omitempty"`
