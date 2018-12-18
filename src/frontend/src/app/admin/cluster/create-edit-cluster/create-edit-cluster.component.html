@@ -29,6 +29,13 @@
                  maxlength="128">
         </div>
         <div class="form-group" style="padding-left: 135px;">
+          <label for="externalLb" class="col-md-3 form-group-label-override required">externalLb</label>
+          <input class="form-control" type="text" id="externalLb" [(ngModel)]="cluster.externalLb"
+                 name="externalLb" size="128"
+                 required
+                 maxlength="128">
+        </div>
+        <div class="form-group" style="padding-left: 135px;">
           <label for="meta_data" class="col-md-3 form-group-label-override required">KubeConfig</label>
           <wayne-ace-editor-box #kubeConfig></wayne-ace-editor-box>
         </div>

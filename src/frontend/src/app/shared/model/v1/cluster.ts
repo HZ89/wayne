@@ -2,6 +2,7 @@ export class Cluster {
   id: number;
   name: string;
   master: string;
+  externalLb: string;
   metaData: string;
   kubeConfig: string;
   user: string;
