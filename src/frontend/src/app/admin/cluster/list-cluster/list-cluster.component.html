@@ -14,6 +14,11 @@
       Master
     </ng-container>
   </clr-dg-column>
+  <clr-dg-column class="col-host">
+    <ng-container *clrDgHideableColumn="{hidden: false}">
+      externalLb
+    </ng-container>
+  </clr-dg-column>
   <clr-dg-column>
     <ng-container *clrDgHideableColumn="{hidden: false}">
       集群状态
@@ -52,6 +57,7 @@
     <clr-dg-cell class="col-id">{{cluster.id}}</clr-dg-cell>
     <clr-dg-cell class="col-cluster-name copy">{{cluster.name}}</clr-dg-cell>
     <clr-dg-cell class="col-host">{{cluster.master}}</clr-dg-cell>
+    <clr-dg-cell class="col-host">{{cluster.externalLb}}</clr-dg-cell>
     <clr-dg-cell>{{getClusterStatus(cluster.status)}}</clr-dg-cell>
     <clr-dg-cell class="col-metadata">
       <div class="text-overflow">
