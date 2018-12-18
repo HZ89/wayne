@@ -152,6 +152,9 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
     }
     this.isSubmitOnGoing = true;
 
+    console.log(this.resource);
+    console.log(this.kubeResource);
+
     let resourceObj = JSON.parse(JSON.stringify(this.kubeResource));
     resourceObj = this.generateResource(resourceObj);
     this.template.ingressId = this.resource.id;
@@ -159,6 +162,8 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
 
     this.template.id = undefined;
     this.template.name = this.resource.name;
+
+    console.log(this.template);
     this.ingressTplService.createWithDomain(this.template, this.app.id, this.addDomain).subscribe(
       status => {
         this.isSubmitOnGoing = false;
@@ -179,7 +184,7 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
   changeAddDomain(i: number) {
     this.addDomain = !this.addDomain;
     this.addDomainText = this.addDomain ? "自动解析" : "手动填写";
-    this.kubeIngress.spec.rules[i].host = "";
+    this.kubeResource.spec.rules[i].host = "";
   }
 }
 
