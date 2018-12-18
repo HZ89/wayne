@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 const TableNameDomain = "domain"
 
@@ -54,9 +56,8 @@ func (*domainModel) UpdateById(m *Domain) (err error) {
 }
 
 func (*domainModel) GetById(id int64) (v *Domain, err error) {
-	v = new(Domain)
+	v = &Domain{Id: id}
 	v.Id = id
-
 	if err = Ormer().Read(v); err != nil {
 		return nil, err
 	}
@@ -64,10 +65,9 @@ func (*domainModel) GetById(id int64) (v *Domain, err error) {
 }
 
 func (*domainModel) GetByName(name string) (v *Domain, err error) {
-	v = new(Domain)
-	v.Name = name
+	v = &Domain{Name: name}
 
-	if err = Ormer().Read(v); err != nil {
+	if err = Ormer().QueryTable(v).Filter("name", name).One(v); err != nil {
 		return nil, err
 	}
 	return

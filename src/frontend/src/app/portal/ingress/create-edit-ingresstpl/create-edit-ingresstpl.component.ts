@@ -164,7 +164,7 @@ export class CreateEditIngressTplComponent extends CreateEditResourceTemplate im
     this.template.name = this.resource.name;
 
     console.log(this.template);
-    this.ingressTplService.createWithDomain(this.template, this.app.id, this.addDomain).subscribe(
+    this.ingressTplService.createWithDomain(this.template, this.app.id, !this.addDomain).subscribe(
       status => {
         this.isSubmitOnGoing = false;
         this.router.navigate(

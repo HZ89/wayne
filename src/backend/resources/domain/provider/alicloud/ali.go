@@ -103,7 +103,7 @@ func (c *aliCloud) ListDomainRecord(name string) (rs []*domain.Record, err error
 		req.PageNumber = currentPage
 		res, err := c.client.DescribeDomainRecords(&req)
 		if err != nil {
-			logs.Debug("ali dns api failed request id: %s", res.RequestId)
+			logs.Debug("ali dns api failed request res: %v err: %v", res, err)
 			return nil, err
 		}
 		for _, resRecord := range res.DomainRecords.Record {

@@ -63,7 +63,7 @@ export class IngressTplService {
 
   createWithDomain(ingressTpl: IngressTpl, appId: number, flag: boolean): Observable<any> {
     return this.http
-      .post(`/api/v1/apps/${appId}/ingresses/tpls/addDomainName/${flag}`, ingressTpl, this.options)
+      .post(`/api/v1/apps/${appId}/ingresses/tpls?addDomainName=${flag}`, ingressTpl, this.options)
       .catch(error => Observable.throw(error))
   }
 
