@@ -47,6 +47,7 @@ type CacheIndexer struct {
 	stopChans chan struct{}
 	Pod       kcache.Indexer
 	Event     kcache.Indexer
+	Endpoints kcache.Indexer
 }
 
 func (c ClusterManager) Close() {
@@ -147,9 +148,14 @@ func buildCacheController(client *kubernetes.Clientset) *CacheIndexer {
 	eventIndexer, eventInformer := kcache.NewIndexerInformer(eventListWatcher, &v1.Event{}, defaultResyncPeriod, kcache.ResourceEventHandlerFuncs{}, kcache.Indexers{})
 	go eventInformer.Run(stopCh)
 
+	// create the endpoint watcher
+	endpointsListWatcher := kcache.NewListWatchFromClient(client.CoreV1().RESTClient(), "endpoint", v1.NamespaceAll, fields.Everything())
+	endpointsIndexer, endpointsinformer := kcache.NewIndexerInformer(endpointsListWatcher, &v1.Endpoints{}, defaultResyncPeriod, kcache.ResourceEventHandlerFuncs{}, kcache.Indexers{})
+	go endpointsinformer.Run(stopCh)
 	return &CacheIndexer{
 		Pod:       podIndexer,
 		Event:     eventIndexer,
+		Endpoints: endpointsIndexer,
 		stopChans: stopCh,
 	}
 }

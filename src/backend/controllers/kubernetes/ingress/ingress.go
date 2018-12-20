@@ -139,11 +139,11 @@ func (c *KubeIngressController) Deploy() {
 	c.Success("ok")
 }
 
-// @Title Get
+// @Title GetDetail
 // @Description find Deployment by cluster
 // @Param	cluster		path 	string	true		"the cluster name"
 // @Param	namespace		path 	string	true		"the namespace name"
-// @Success 200 {object} resources.ingress.Ingress success
+// @Success 200 {object} ingress.Ingress success
 // @router /:ingress/detail/namespaces/:namespace/clusters/:cluster [get]
 func (c *KubeIngressController) GetDetail() {
 	cluster := c.Ctx.Input.Param(":cluster")
